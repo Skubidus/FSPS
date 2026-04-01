@@ -15,7 +15,9 @@ public sealed partial class MainWindow : Window
             vm.PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(ViewModels.MainWindowViewModel.AppTitle))
+                {
                     this.Title = vm.AppTitle;
+                }
             };
         }
     }

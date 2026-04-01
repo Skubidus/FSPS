@@ -46,7 +46,10 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void DeleteProfile()
     {
-        if (SelectedProfile is null) return;
+        if (SelectedProfile is null)
+        {
+            return;
+        }
         Profiles.Remove(SelectedProfile);
         SelectedProfile = Profiles.Count > 0 ? Profiles[0] : null;
     }
