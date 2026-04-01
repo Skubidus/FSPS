@@ -6,14 +6,59 @@
     xmlns:local="using:FSPSWinUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
-    Title="FSPSWinUI">
+    Title="{Binding AppTitle}">
 
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
+        <!-- Custom Title Bar (theme-aware) -->
+        <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Height="48" Grid.Row="0">
+                <Grid Margin="12,0">
+                    <!-- Use three columns so the center column occupies ~80%: 0.5* | 4* | 0.5* -->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="4*" />
+                        <ColumnDefinition Width="0.5*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Centered content in the middle column -->
+                    <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <ComboBox Grid.Column="0" ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfile}" DisplayMemberPath="Name" MinWidth="200" HorizontalAlignment="Stretch" />
+
+                        <Button Grid.Column="1" Margin="8,0,0,0" Command="{Binding AddProfileCommand}" ToolTipService.ToolTip="Add profile">
+                            <SymbolIcon Symbol="Add" />
+                        </Button>
+
+                        <Button Grid.Column="2" Margin="8,0,0,0" Command="{Binding EditProfileCommand}" ToolTipService.ToolTip="Edit selected profile">
+                            <SymbolIcon Symbol="Edit" />
+                        </Button>
+
+                        <Button Grid.Column="3" Margin="8,0,0,0" Command="{Binding DeleteProfileCommand}" ToolTipService.ToolTip="Delete selected profile">
+                            <SymbolIcon Symbol="Delete" />
+                        </Button>
+                    </Grid>
+                </Grid>
+        </Border>
+
+        <!-- Content area -->
+        <Grid Grid.Row="1">
+            <!-- Placeholder for main content -->
+        </Grid>
     </Grid>
 </Window>
