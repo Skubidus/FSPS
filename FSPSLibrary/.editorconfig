@@ -1,0 +1,5 @@
+root = true
+
+[*.cs]
+# Ensure file-scoped namespaces in this project
+csharp_style_namespace_declarations = file_scoped:warning

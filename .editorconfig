@@ -1,0 +1,21 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+
+# C# files
+[*.cs]
+# Use file-scoped namespaces
+csharp_style_namespace_declarations = file_scoped:suggestion
+
+# Nullable annotations are enabled in projects, do not enforce here
+
+# Prefer var when type is apparent
+csharp_style_var_when_type_is_apparent = true:suggestion
+
+# Prefer explicit type when type is not apparent
+csharp_style_var_elsewhere = false:suggestion
+
+# File headers and ordering can be added later
