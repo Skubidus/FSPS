@@ -18,3 +18,4 @@ global using Microsoft.UI.Xaml.Navigation;
 
 global using Windows.Foundation;
 global using Windows.ApplicationModel;
+// CommunityToolkit usings intentionally omitted from global usings to avoid implicit dependencies in code files.

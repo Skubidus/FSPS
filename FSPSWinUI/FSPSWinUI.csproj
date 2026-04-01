@@ -46,6 +46,9 @@
   <ItemGroup>
     <ProjectReference Include="..\FSPSLibrary\FSPSLibrary.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.1" />
+  </ItemGroup>
 
   <!--
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
