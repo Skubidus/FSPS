@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "FSPSWinUI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "FSPSWinUI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
