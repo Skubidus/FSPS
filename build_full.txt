@@ -1,0 +1,16 @@
+  Wiederherzustellende Projekte werden ermittelt...
+D:\Coding\C#\FSPS\FSPSWinUI\FSPSWinUI.csproj : warning NU1603: FSPSWinUI h├ñngt von CommunityToolkit.Mvvm (>= 8.1.1) ab, aber CommunityToolkit.Mvvm 8.1.1 wurde nicht gefunden. CommunityToolkit.Mvvm 8.2.0 wurde stattdessen aufgel├Âst.
+  Alle Projekte sind f├╝r die Wiederherstellung auf dem neuesten Stand.
+D:\Coding\C#\FSPS\FSPSWinUI\FSPSWinUI.csproj : warning NU1603: FSPSWinUI h├ñngt von CommunityToolkit.Mvvm (>= 8.1.1) ab, aber CommunityToolkit.Mvvm 8.1.1 wurde nicht gefunden. CommunityToolkit.Mvvm 8.2.0 wurde stattdessen aufgel├Âst.
+  FSPSLibrary -> D:\Coding\C#\FSPS\FSPSLibrary\bin\x64\Debug\net9.0-windows10.0.19041.0\FSPSLibrary.dll
+C:\Users\Skubidus\.nuget\packages\microsoft.windowsappsdk.winui\1.8.260224000\buildTransitive\Microsoft.UI.Xaml.Markup.Compiler.interop.targets(594,9): error MSB3073: Der Befehl ""C:\Users\Skubidus\.nuget\packages\microsoft.windowsappsdk.winui\1.8.260224000\buildTransitive\..\tools\net6.0\..\net472\XamlCompiler.exe" "obj\x64\Debug\net9.0-windows10.0.19041.0\win-x64\\input.json" "obj\x64\Debug\net9.0-windows10.0.19041.0\win-x64\\output.json"" wurde mit dem Code 1 beendet. [D:\Coding\C#\FSPS\FSPSWinUI\FSPSWinUI.csproj]
+
+Fehler beim Buildvorgang.
+
+D:\Coding\C#\FSPS\FSPSWinUI\FSPSWinUI.csproj : warning NU1603: FSPSWinUI h├ñngt von CommunityToolkit.Mvvm (>= 8.1.1) ab, aber CommunityToolkit.Mvvm 8.1.1 wurde nicht gefunden. CommunityToolkit.Mvvm 8.2.0 wurde stattdessen aufgel├Âst.
+D:\Coding\C#\FSPS\FSPSWinUI\FSPSWinUI.csproj : warning NU1603: FSPSWinUI h├ñngt von CommunityToolkit.Mvvm (>= 8.1.1) ab, aber CommunityToolkit.Mvvm 8.1.1 wurde nicht gefunden. CommunityToolkit.Mvvm 8.2.0 wurde stattdessen aufgel├Âst.
+C:\Users\Skubidus\.nuget\packages\microsoft.windowsappsdk.winui\1.8.260224000\buildTransitive\Microsoft.UI.Xaml.Markup.Compiler.interop.targets(594,9): error MSB3073: Der Befehl ""C:\Users\Skubidus\.nuget\packages\microsoft.windowsappsdk.winui\1.8.260224000\buildTransitive\..\tools\net6.0\..\net472\XamlCompiler.exe" "obj\x64\Debug\net9.0-windows10.0.19041.0\win-x64\\input.json" "obj\x64\Debug\net9.0-windows10.0.19041.0\win-x64\\output.json"" wurde mit dem Code 1 beendet. [D:\Coding\C#\FSPS\FSPSWinUI\FSPSWinUI.csproj]
+    2 Warnung(en)
+    1 Fehler
+
+Verstrichene Zeit 00:00:02.49

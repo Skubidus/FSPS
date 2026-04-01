@@ -13,7 +13,7 @@
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
-    <Grid>
+    <Grid Padding="15">
         <Grid.DataContext>
             <vm:MainWindowViewModel />
         </Grid.DataContext>
@@ -25,15 +25,15 @@
         <!-- Custom Title Bar (theme-aware) -->
         <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Height="48" Grid.Row="0">
                 <Grid Margin="12,0">
-                    <!-- Use three columns so the center column occupies ~80%: 0.5* | 4* | 0.5* -->
+                    <!-- Use three columns so the center column occupies ~80%: 1* | 8* | 1* -->
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.5*" />
-                        <ColumnDefinition Width="4*" />
-                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="8*" />
+                        <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
 
-                    <!-- Centered content in the middle column -->
-                    <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <!-- Center content in the middle column (will stretch to 80% of available width) -->
+                    <Grid Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="Auto" />
@@ -41,9 +41,9 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox Grid.Column="0" ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfile}" DisplayMemberPath="Name" MinWidth="200" HorizontalAlignment="Stretch" />
+                        <ComboBox x:Name="ProfileComboBox" Grid.Column="0" ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfile}" DisplayMemberPath="Name" MinWidth="200" HorizontalAlignment="Stretch" />
 
-                        <Button Grid.Column="1" Margin="8,0,0,0" Command="{Binding AddProfileCommand}" ToolTipService.ToolTip="Add profile">
+                        <Button Grid.Column="1" Margin="8,0,0,0" Click="AddProfileButton_Click" ToolTipService.ToolTip="Add profile">
                             <SymbolIcon Symbol="Add" />
                         </Button>
 

@@ -1,3 +1,8 @@
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using System;
+using System.Linq;
+
 namespace FSPSWinUI;
 
 public sealed partial class MainWindow : Window
@@ -19,6 +24,59 @@ public sealed partial class MainWindow : Window
                     this.Title = vm.AppTitle;
                 }
             };
+        }
+    }
+
+
+    private async void AddProfileButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!(this.Content is FrameworkElement root && root.DataContext is ViewModels.MainWindowViewModel vm))
+            return;
+
+        var dialog = new ContentDialog
+        {
+            Title = "New Profile",
+            PrimaryButtonText = "OK",
+            SecondaryButtonText = "Cancel",
+            DefaultButton = ContentDialogButton.Primary
+        };
+
+        // Ensure the dialog is associated with this window's XamlRoot so it appears correctly
+        dialog.XamlRoot = root.XamlRoot;
+
+        var textBox = new TextBox
+        {
+            PlaceholderText = "enter profile name",
+            Margin = new Thickness(0, 8, 0, 0)
+        };
+
+        // Validation: enable OK only when non-empty and not duplicate (case-insensitive, trimmed)
+        void UpdateOkEnabled()
+        {
+            var trimmed = (textBox.Text ?? string.Empty).Trim();
+            var exists = vm.Profiles.Any(p => string.Equals((p.Name ?? string.Empty).Trim(), trimmed, StringComparison.OrdinalIgnoreCase));
+            dialog.IsPrimaryButtonEnabled = !string.IsNullOrWhiteSpace(trimmed) && !exists;
+        }
+
+        textBox.TextChanged += (s, args) => UpdateOkEnabled();
+
+        dialog.Content = textBox;
+        dialog.IsPrimaryButtonEnabled = false;
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            var name = (textBox.Text ?? string.Empty).Trim();
+            if (string.IsNullOrWhiteSpace(name))
+                return;
+
+            var exists = vm.Profiles.Any(p => string.Equals((p.Name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase));
+            if (exists)
+                return;
+
+            var profile = new FSPSLibrary.Models.Profile { Name = name };
+            vm.Profiles.Add(profile);
+            vm.SelectedProfile = profile;
         }
     }
 }
