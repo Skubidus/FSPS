@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FSPSLibrary.Models;
+using Microsoft.Extensions.Configuration;
 using System.Collections.ObjectModel;
 
 namespace FSPSWinUI.ViewModels;
@@ -20,7 +21,14 @@ public partial class MainWindowViewModel : ObservableObject
         // sample placeholder entries - can be removed later
         Profiles.Add(new Profile { Name = "Default" });
         Profiles.Add(new Profile { Name = "Modded" });
-        _selectedProfile = Profiles.Count > 0 ? Profiles[0] : null;
+        SelectedProfile = Profiles.Count > 0 ? Profiles[0] : null;
+
+        var config = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: true)
+            .Build();
+
+        _appTitle = config["App:Title"] ?? _appTitle;
     }
 
     [RelayCommand]
@@ -38,8 +46,8 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void DeleteProfile()
     {
-        if (_selectedProfile is null) return;
-        Profiles.Remove(_selectedProfile);
-        _selectedProfile = Profiles.Count > 0 ? Profiles[0] : null;
+        if (SelectedProfile is null) return;
+        Profiles.Remove(SelectedProfile);
+        SelectedProfile = Profiles.Count > 0 ? Profiles[0] : null;
     }
 }
