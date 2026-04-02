@@ -13,52 +13,63 @@
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
-    <Grid Padding="15">
+    <Grid>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Custom Title Bar (theme-aware) -->
-        <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Height="48" Grid.Row="0">
-                <Grid Margin="12,0">
-                    <!-- Use three columns so the center column occupies ~80%: 1* | 8* | 1* -->
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="8*" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
+        <!-- Title bar (height set from code-behind to match system caption buttons) -->
+        <Border x:Name="TitleBarBorder" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Grid.Row="0">
+            <!--{ThemeResource ApplicationPageBackgroundThemeBrush}-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-                    <!-- Center content in the middle column (will stretch to 80% of available width) -->
-                    <Grid Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <ComboBox x:Name="ProfileComboBox" Grid.Column="0" ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfile, Mode=TwoWay}" DisplayMemberPath="Name" MinWidth="200" HorizontalAlignment="Stretch" />
-
-                        <Button Grid.Column="1" Margin="8,0,0,0" Click="AddProfileButton_Click" ToolTipService.ToolTip="Add profile">
-                            <SymbolIcon Symbol="Add" />
-                        </Button>
-
-                        <Button Grid.Column="2" Margin="8,0,0,0" Command="{Binding EditProfileCommand}" ToolTipService.ToolTip="Edit selected profile">
-                            <SymbolIcon Symbol="Edit" />
-                        </Button>
-
-                        <Button Grid.Column="3" Margin="8,0,0,0" Click="DeleteProfileButton_Click" ToolTipService.ToolTip="Delete selected profile" IsEnabled="{Binding CanDelete}">
-    <SymbolIcon Symbol="Delete" />
-</Button>
-                    </Grid>
+                <!-- Draggable area with app title (left aligned, 15px margin) -->
+                <Grid x:Name="WindowDragArea" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,0,0,0">
+                    <TextBlock Text="{Binding AppTitle}" VerticalAlignment="Center" FontSize="18" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" />
                 </Grid>
+
+                <!-- Right column intentionally left empty so system caption buttons can sit there -->
+            </Grid>
         </Border>
 
-        <!-- Content area -->
-        <Grid Grid.Row="1">
-            <!-- Placeholder for main content -->
+        <!-- Main content area with internal padding 15 -->
+        <Grid Grid.Row="1" Padding="15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="8*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Center column: existing profiles control grid (will occupy ~80% via 1*/8*/1*) -->
+            <Grid Grid.Column="1" x:Name="ProfilesGrid" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <ComboBox x:Name="ProfileComboBox" Grid.Column="0" ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfile, Mode=TwoWay}" DisplayMemberPath="Name" MinWidth="200" HorizontalAlignment="Stretch" />
+
+                <Button Grid.Column="1" Margin="8,0,0,0" Click="AddProfileButton_Click" ToolTipService.ToolTip="Add profile">
+                    <SymbolIcon Symbol="Add" />
+                </Button>
+
+                <Button Grid.Column="2" Margin="8,0,0,0" Command="{Binding EditProfileCommand}" ToolTipService.ToolTip="Edit selected profile">
+                    <SymbolIcon Symbol="Edit" />
+                </Button>
+
+                <Button Grid.Column="3" Margin="8,0,0,0" Click="DeleteProfileButton_Click" ToolTipService.ToolTip="Delete selected profile" IsEnabled="{Binding CanDelete}">
+                    <SymbolIcon Symbol="Delete" />
+                </Button>
+            </Grid>
         </Grid>
+
     </Grid>
 </Window>
