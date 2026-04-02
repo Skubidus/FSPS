@@ -27,11 +27,12 @@ public sealed partial class MainWindow : Window
         }
     }
 
-
     private async void AddProfileButton_Click(object sender, RoutedEventArgs e)
     {
         if (!(this.Content is FrameworkElement root && root.DataContext is ViewModels.MainWindowViewModel vm))
+        {
             return;
+        }
 
         var dialog = new ContentDialog
         {
@@ -68,15 +69,56 @@ public sealed partial class MainWindow : Window
         {
             var name = (textBox.Text ?? string.Empty).Trim();
             if (string.IsNullOrWhiteSpace(name))
+            {
                 return;
+            }
 
             var exists = vm.Profiles.Any(p => string.Equals((p.Name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase));
             if (exists)
+            {
                 return;
+            }
 
             var profile = new FSPSLibrary.Models.Profile { Name = name };
-            vm.Profiles.Add(profile);
-            vm.SelectedProfile = profile;
+            vm.AddProfile(profile);
+        }
+    }
+
+    private async void DeleteProfileButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (!(this.Content is FrameworkElement root && root.DataContext is ViewModels.MainWindowViewModel vm))
+        {
+            return;
+        }
+
+        var selected = vm.SelectedProfile;
+        if (selected is null)
+        {
+            return;
+        }
+
+        var dialog = new ContentDialog
+        {
+            Title = "Delete Profile",
+            Content = $"Are you sure you want to delete the profile '{selected.Name}'?",
+            PrimaryButtonText = "Delete",
+            SecondaryButtonText = "Cancel",
+            DefaultButton = ContentDialogButton.Secondary
+        };
+        dialog.XamlRoot = root.XamlRoot;
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            if (vm.DeleteProfileCommand.CanExecute(null))
+            {
+                vm.DeleteProfileCommand.Execute(null);
+            }
+
+            if (vm.ProfileSelectionChangedCommand.CanExecute(null))
+            {
+                vm.ProfileSelectionChangedCommand.Execute(null);
+            }
         }
     }
 }

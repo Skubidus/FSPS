@@ -41,7 +41,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox x:Name="ProfileComboBox" Grid.Column="0" ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfile}" DisplayMemberPath="Name" MinWidth="200" HorizontalAlignment="Stretch" />
+                        <ComboBox x:Name="ProfileComboBox" Grid.Column="0" ItemsSource="{Binding Profiles}" SelectedItem="{Binding SelectedProfile, Mode=TwoWay}" DisplayMemberPath="Name" MinWidth="200" HorizontalAlignment="Stretch" />
 
                         <Button Grid.Column="1" Margin="8,0,0,0" Click="AddProfileButton_Click" ToolTipService.ToolTip="Add profile">
                             <SymbolIcon Symbol="Add" />
@@ -51,9 +51,9 @@
                             <SymbolIcon Symbol="Edit" />
                         </Button>
 
-                        <Button Grid.Column="3" Margin="8,0,0,0" Command="{Binding DeleteProfileCommand}" ToolTipService.ToolTip="Delete selected profile">
-                            <SymbolIcon Symbol="Delete" />
-                        </Button>
+                        <Button Grid.Column="3" Margin="8,0,0,0" Click="DeleteProfileButton_Click" ToolTipService.ToolTip="Delete selected profile" IsEnabled="{Binding CanDelete}">
+    <SymbolIcon Symbol="Delete" />
+</Button>
                     </Grid>
                 </Grid>
         </Border>
