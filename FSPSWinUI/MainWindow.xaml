@@ -22,16 +22,18 @@
 
         <!-- Title bar (height set from code-behind to match system caption buttons) -->
         <Border x:Name="TitleBarBorder" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Grid.Row="0">
-            <!--{ThemeResource ApplicationPageBackgroundThemeBrush}-->
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <!-- Draggable area with app title (left aligned, 15px margin) -->
-                <Grid x:Name="WindowDragArea" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,0,0,0">
-                    <TextBlock Text="{Binding AppTitle}" VerticalAlignment="Center" FontSize="18" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+                <!-- Draggable area with app icon and title (left aligned, 15px margin) -->
+                <Grid x:Name="WindowDragArea" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <SymbolIcon Symbol="Setting" Width="20" Height="20" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" Margin="0,0,8,0" />
+                        <TextBlock Text="{Binding AppTitle}" VerticalAlignment="Center" FontSize="16" Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+                    </StackPanel>
                 </Grid>
 
                 <!-- Right column intentionally left empty so system caption buttons can sit there -->

@@ -1,8 +1,10 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using WinRT.Interop;
 
 namespace FSPSWinUI;
 
@@ -13,30 +15,65 @@ public sealed partial class MainWindow : Window
     [DllImport("user32.dll")]
     private static extern int GetSystemMetrics(int nIndex);
 
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+    private static extern IntPtr LoadImage(IntPtr hInst, string lpszName, uint uType, int cxDesired, int cyDesired, uint fuLoad);
+
+    private const uint WM_SETICON = 0x80;
+    private const uint IMAGE_ICON = 1;
+    private const uint LR_LOADFROMFILE = 0x00000010;
+    private const int ICON_SMALL = 0;
+    private const int ICON_BIG = 1;
+
     public MainWindow()
     {
         InitializeComponent();
 
-        // Extend content into the title bar and use the named draggable area for the caption drag region.
+        // Extend content into the title bar so it becomes theme-aware.
         this.ExtendsContentIntoTitleBar = true;
 
-        // Determine system caption/button height and size the title bar to match.
+        // Size the title bar to match system caption buttons.
         var captionHeight = GetSystemMetrics(SM_CYCAPTION);
         if (captionHeight > 0)
         {
-            // Small negative offset to better match system caption button height on some systems
             TitleBarBorder.Height = Math.Max(1, captionHeight - 13);
         }
 
         this.SetTitleBar(TitleBarBorder);
 
-        // Keep title bar theme-controlled
+        // Keep title bar colors theme-controlled (not hard-coded).
         var appWindow = this.AppWindow;
-        appWindow.TitleBar.InactiveBackgroundColor = null; // keep theme resources
+        appWindow.TitleBar.InactiveBackgroundColor = null;
         appWindow.TitleBar.BackgroundColor = null;
 
         AppWindow.Resize(new Windows.Graphics.SizeInt32(1920, 1080));
 
+        // Set taskbar icon from Assets\app.ico (unpackaged scenario).
+        try
+        {
+            var icoPath = Path.Combine(AppContext.BaseDirectory, "Assets", "app.ico");
+            if (File.Exists(icoPath))
+            {
+                var hwnd = WindowNative.GetWindowHandle(this);
+                var hBig = LoadImage(IntPtr.Zero, icoPath, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
+                var hSmall = LoadImage(IntPtr.Zero, icoPath, IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
+                if (hBig != IntPtr.Zero)
+                {
+                    SendMessage(hwnd, WM_SETICON, new IntPtr(ICON_BIG), hBig);
+                }
+
+                if (hSmall != IntPtr.Zero)
+                {
+                    SendMessage(hwnd, WM_SETICON, new IntPtr(ICON_SMALL), hSmall);
+                }
+            }
+        }
+        catch
+        {
+            // Taskbar icon is optional; ignore failures.
+        }
 
         // Window.Title doesn't support data binding — sync it from the ViewModel after XAML is loaded.
         var vm = new ViewModels.MainWindowViewModel();
