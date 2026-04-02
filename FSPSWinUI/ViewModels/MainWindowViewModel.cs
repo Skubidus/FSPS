@@ -42,15 +42,10 @@ public partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void AddProfile()
-    {
-        // TODO: Implement adding logic.
-    }
-
-    [RelayCommand]
     private void EditProfile()
     {
         // TODO: Implement edit logic.
+        return;
     }
 
     [RelayCommand]

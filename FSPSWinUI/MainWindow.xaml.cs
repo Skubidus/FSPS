@@ -14,17 +14,20 @@ public sealed partial class MainWindow : Window
         AppWindow.Resize(new Windows.Graphics.SizeInt32(1920, 1080));
 
         // Window.Title doesn't support data binding — sync it from the ViewModel after XAML is loaded.
-        if (this.Content is FrameworkElement { DataContext: ViewModels.MainWindowViewModel vm })
+        var vm = new ViewModels.MainWindowViewModel();
+        if (this.Content is FrameworkElement root)
         {
-            this.Title = vm.AppTitle;
-            vm.PropertyChanged += (s, e) =>
-            {
-                if (e.PropertyName == nameof(ViewModels.MainWindowViewModel.AppTitle))
-                {
-                    this.Title = vm.AppTitle;
-                }
-            };
+            root.DataContext = vm;
         }
+
+        this.Title = vm.AppTitle;
+        vm.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(ViewModels.MainWindowViewModel.AppTitle))
+            {
+                this.Title = vm.AppTitle;
+            }
+        };
     }
 
     private async void AddProfileButton_Click(object sender, RoutedEventArgs e)

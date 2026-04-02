@@ -14,9 +14,7 @@
     </Window.SystemBackdrop>
 
     <Grid Padding="15">
-        <Grid.DataContext>
-            <vm:MainWindowViewModel />
-        </Grid.DataContext>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
