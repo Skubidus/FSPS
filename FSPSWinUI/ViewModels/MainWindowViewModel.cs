@@ -10,11 +10,11 @@ public partial class MainWindowViewModel : ObservableObject
 {
 
 
-    public ObservableCollection<Profile> Profiles { get; } = new ObservableCollection<Profile>();
+    public ObservableCollection<ProfileModel> Profiles { get; } = new ObservableCollection<ProfileModel>();
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDelete))]
-    private Profile? _selectedProfile;
+    private ProfileModel? _selectedProfile;
 
     public bool CanDelete
     {
@@ -30,8 +30,8 @@ public partial class MainWindowViewModel : ObservableObject
     public MainWindowViewModel()
     {
         // sample placeholder entries - can be removed later
-        Profiles.Add(new Profile { Name = "Default" });
-        Profiles.Add(new Profile { Name = "Modded" });
+        Profiles.Add(new ProfileModel { Name = "Default" });
+        Profiles.Add(new ProfileModel { Name = "Modded" });
         Profiles.CollectionChanged += (s, e) => { OnPropertyChanged(nameof(CanDelete)); };
         SelectedProfile = Profiles.Count > 0 ? Profiles[0] : null;
 
@@ -72,7 +72,7 @@ public partial class MainWindowViewModel : ObservableObject
         return;
     }
 
-    public void AddProfile(Profile profile)
+    public void AddProfile(ProfileModel profile)
     {
         if (profile is null)
         {
