@@ -8,6 +8,8 @@ namespace FSPSWinUI.ViewModels;
 
 public partial class MainWindowViewModel : ObservableObject
 {
+
+
     public ObservableCollection<Profile> Profiles { get; } = new ObservableCollection<Profile>();
 
     [ObservableProperty]

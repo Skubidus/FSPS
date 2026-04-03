@@ -1,3 +1,5 @@
+using FSPSWinUI.ViewModels;
+
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -10,6 +12,9 @@ namespace FSPSWinUI;
 
 public sealed partial class MainWindow : Window
 {
+
+    public MainWindowViewModel ViewModel { get; private set; }
+
     private const int SM_CYCAPTION = 4;
 
     [DllImport("user32.dll")]
@@ -27,18 +32,39 @@ public sealed partial class MainWindow : Window
     private const int ICON_SMALL = 0;
     private const int ICON_BIG = 1;
 
-    public MainWindow()
+    public MainWindow(MainWindowViewModel viewModel)
     {
+        ArgumentNullException.ThrowIfNull(viewModel);
+
         InitializeComponent();
+
+        // Use DI-provided ViewModel instead of creating a new one
+        this.ViewModel = viewModel;
+        if (this.Content is FrameworkElement root)
+        {
+            root.DataContext = this.ViewModel;
+        }
+
+        this.Title = this.ViewModel.AppTitle;
+        this.ViewModel.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(MainWindowViewModel.AppTitle))
+            {
+                this.Title = this.ViewModel.AppTitle;
+            }
+        };
 
         // Extend content into the title bar so it becomes theme-aware.
         this.ExtendsContentIntoTitleBar = true;
 
         // Size the title bar to match system caption buttons.
-        var captionHeight = GetSystemMetrics(SM_CYCAPTION);
-        if (captionHeight > 0)
+        if (OperatingSystem.IsWindows())
         {
-            TitleBarBorder.Height = Math.Max(1, captionHeight - 13);
+            var captionHeight = GetSystemMetrics(SM_CYCAPTION);
+            if (captionHeight > 0)
+            {
+                TitleBarBorder.Height = Math.Max(1, captionHeight - 13);
+            }
         }
 
         this.SetTitleBar(TitleBarBorder);
@@ -54,7 +80,7 @@ public sealed partial class MainWindow : Window
         try
         {
             var icoPath = Path.Combine(AppContext.BaseDirectory, "Assets", "app.ico");
-            if (File.Exists(icoPath))
+            if (File.Exists(icoPath) && OperatingSystem.IsWindows())
             {
                 var hwnd = WindowNative.GetWindowHandle(this);
                 var hBig = LoadImage(IntPtr.Zero, icoPath, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
@@ -75,28 +101,14 @@ public sealed partial class MainWindow : Window
             // Taskbar icon is optional; ignore failures.
         }
 
-        // Window.Title doesn't support data binding — sync it from the ViewModel after XAML is loaded.
-        var vm = new ViewModels.MainWindowViewModel();
-        if (this.Content is FrameworkElement root)
-        {
-            root.DataContext = vm;
-        }
-
-        this.Title = vm.AppTitle;
-        vm.PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == nameof(ViewModels.MainWindowViewModel.AppTitle))
-            {
-                this.Title = vm.AppTitle;
-            }
-        };
-
         return;
     }
 
     private async void AddProfileButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!(this.Content is FrameworkElement root && root.DataContext is ViewModels.MainWindowViewModel vm))
+
+
+        if (!(this.Content is FrameworkElement root && root.DataContext is MainWindowViewModel vm))
         {
             return;
         }
@@ -153,7 +165,9 @@ public sealed partial class MainWindow : Window
 
     private async void DeleteProfileButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!(this.Content is FrameworkElement root && root.DataContext is ViewModels.MainWindowViewModel vm))
+
+
+        if (!(this.Content is FrameworkElement root && root.DataContext is MainWindowViewModel vm))
         {
             return;
         }
