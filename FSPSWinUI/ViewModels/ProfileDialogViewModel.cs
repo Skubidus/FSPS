@@ -20,10 +20,22 @@ public partial class ProfileDialogViewModel : ObservableObject
     [ObservableProperty]
     private string _name = string.Empty;
 
+    partial void OnNameChanged(string value)
+    {
+        OnPropertyChanged(nameof(CanOk));
+    }
+
     [ObservableProperty]
     private string _path = string.Empty;
 
-    public string DialogTitle => _mode == DialogMode.Create ? "Neues Profil" : "Profil bearbeiten";
+    partial void OnPathChanged(string value)
+    {
+        OnPropertyChanged(nameof(CanOk));
+    }
+
+    public string DialogTitle => _mode == DialogMode.Create ? "New Profile" : "Edit Profile";
+
+    public bool CanOk => Validate(out _);
 
     public IRelayCommand BrowseCommand { get; }
 
@@ -52,24 +64,24 @@ public partial class ProfileDialogViewModel : ObservableObject
         var path = (Path ?? string.Empty).Trim();
         if (string.IsNullOrWhiteSpace(name))
         {
-            error = "Name darf nicht leer sein.";
+            error = "Name must not be empty.";
             return false;
         }
         if (string.IsNullOrWhiteSpace(path))
         {
-            error = "Pfad darf nicht leer sein.";
+            error = "Path must not be empty.";
             return false;
         }
         if (!System.IO.Path.IsPathRooted(path) || !System.IO.Path.IsPathFullyQualified(path))
         {
-            error = "Pfad muss absolut sein.";
+            error = "Path must be absolute.";
             return false;
         }
         if (_mode == DialogMode.Create || (name != _originalProfile?.Name))
         {
             if (_profiles.Any(p => string.Equals((p.Name ?? string.Empty).Trim(), name, StringComparison.OrdinalIgnoreCase)))
             {
-                error = "Name existiert bereits.";
+                error = "Name already exists.";
                 return false;
             }
         }
@@ -77,7 +89,7 @@ public partial class ProfileDialogViewModel : ObservableObject
         {
             if (_profiles.Any(p => string.Equals((p.Path ?? string.Empty).Trim(), path, StringComparison.OrdinalIgnoreCase)))
             {
-                error = "Pfad existiert bereits.";
+                error = "Path already exists.";
                 return false;
             }
         }

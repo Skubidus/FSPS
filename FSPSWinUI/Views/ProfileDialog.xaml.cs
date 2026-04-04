@@ -14,8 +14,8 @@ public sealed partial class ProfileDialog : ContentDialog
         this.XamlRoot = xamlRoot;
         this.DataContext = viewModel;
         this.ViewModel = viewModel;
+        // Validate on primary click; do not call Hide() here — let ContentDialog set the result to Primary.
         this.PrimaryButtonClick += OnPrimaryButtonClick;
-        this.SecondaryButtonClick += (s, e) => { this.Hide(); };
     }
 
     public ProfileDialogViewModel ViewModel { get; }
@@ -48,6 +48,7 @@ public sealed partial class ProfileDialog : ContentDialog
             _ = errorDialog.ShowAsync();
             return;
         }
-        this.Hide();
+        // Let the ContentDialog complete normally so ShowAsync() returns Primary
+        return;
     }
 }

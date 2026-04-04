@@ -88,8 +88,11 @@ public partial class MainWindowViewModel : ObservableObject
         if (result == Microsoft.UI.Xaml.Controls.ContentDialogResult.Primary)
         {
             var updated = dialogVm.GetResult();
+            var oldName = SelectedProfile.Name;
+            var oldPath = SelectedProfile.Path;
             SelectedProfile.Name = updated.Name;
             SelectedProfile.Path = updated.Path;
+            Debug.WriteLine($"[INFO] Profile edited: OldName='{oldName}', OldPath='{oldPath}' → NewName='{updated.Name}', NewPath='{updated.Path}'");
             // Optionally, re-sort or trigger any update logic
         }
         return;
@@ -105,6 +108,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         var toDelete = SelectedProfile;
         Profiles.Remove(toDelete);
+        Debug.WriteLine($"[INFO] Profile deleted: Name='{toDelete.Name}', Path='{toDelete.Path}'");
         if (Profiles.Count > 0)
         {
             SelectedProfile = Profiles[0];
@@ -126,6 +130,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         var currentSelectionName = SelectedProfile?.Name;
         Profiles.Add(profile);
+        Debug.WriteLine($"[INFO] New profile created: Name='{profile.Name}', Path='{profile.Path}'");
         SortProfiles();
 
         var newSelected = Profiles.FirstOrDefault(p => object.ReferenceEquals(p, profile));
@@ -137,6 +142,7 @@ public partial class MainWindowViewModel : ObservableObject
         if (newSelected is not null)
         {
             SelectedProfile = newSelected;
+            Debug.WriteLine($"[INFO] Profile selected: Name='{newSelected.Name}', Path='{newSelected.Path}'");
         }
         else if (currentSelectionName is not null)
         {
