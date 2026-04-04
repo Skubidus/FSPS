@@ -8,6 +8,8 @@ using System.Linq;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WinRT.Interop;
+using Microsoft.UI.Xaml.Media;
+using Windows.UI;
 
 namespace FSPSWinUI;
 
@@ -127,55 +129,93 @@ public sealed partial class MainWindow : Window
 
         var dialog = new ContentDialog
         {
+            XamlRoot = root.XamlRoot,
             Title = "New Profile",
             PrimaryButtonText = "OK",
             SecondaryButtonText = "Cancel",
-            DefaultButton = ContentDialogButton.Primary
+            DefaultButton = ContentDialogButton.Primary,
+            HorizontalContentAlignment = HorizontalAlignment.Stretch
         };
 
-        // Ensure the dialog is associated with this window's XamlRoot so it appears correctly
-        dialog.XamlRoot = root.XamlRoot;
+        // Build dialog content using a single Grid (2 columns x 4 rows) inside the fixed-width Border wrapper.
+        var rootGrid = new Grid
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            Margin = new Thickness(0)
+        };
+        // Columns: TextBox (star) | Button (auto)
+        rootGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        rootGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        // Rows 0..3: name label, name box, path label, path row
+        rootGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        rootGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        rootGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        rootGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-        // Build dialog content: Name + Path row (path TextBox + browse button)
-        var contentPanel = new StackPanel();
+        var nameLabel = new TextBlock
+        {
+            Text = "Name",
+            Margin = new Thickness(0, 0, 0, 6),
+            FontSize = 14,
+            HorizontalAlignment = HorizontalAlignment.Left
+        };
+        Grid.SetRow(nameLabel, 0);
+        Grid.SetColumn(nameLabel, 0);
+        Grid.SetColumnSpan(nameLabel, 2);
+        rootGrid.Children.Add(nameLabel);
 
-        var nameLabel = new TextBlock { Text = "Name" };
         var nameTextBox = new TextBox
         {
             PlaceholderText = "enter profile name",
-            Margin = new Thickness(0, 4, 0, 8)
+            Margin = new Thickness(0, 0, 0, 8),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            MinHeight = 32
         };
+        Grid.SetRow(nameTextBox, 1);
+        Grid.SetColumn(nameTextBox, 0);
+        Grid.SetColumnSpan(nameTextBox, 2);
+        rootGrid.Children.Add(nameTextBox);
 
-        var pathLabel = new TextBlock { Text = "Folder path" };
+        var pathLabel = new TextBlock
+        {
+            Text = "Folder path",
+            Margin = new Thickness(0, 0, 0, 6),
+            FontSize = 14,
+            HorizontalAlignment = HorizontalAlignment.Left
+        };
+        Grid.SetRow(pathLabel, 2);
+        Grid.SetColumn(pathLabel, 0);
+        Grid.SetColumnSpan(pathLabel, 2);
+        rootGrid.Children.Add(pathLabel);
 
-        var pathGrid = new Grid();
-        pathGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        pathGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-
+        // Row 3: Path TextBox in col 0 (1*) and Browse Button in col 1 (Auto)
         var pathTextBox = new TextBox
         {
             PlaceholderText = "enter or pick a folder path",
-            Margin = new Thickness(0, 4, 8, 0)
+            Margin = new Thickness(0, 0, 10, 0),
+            MinHeight = 32,
+            HorizontalAlignment = HorizontalAlignment.Stretch
         };
+        Grid.SetRow(pathTextBox, 3);
         Grid.SetColumn(pathTextBox, 0);
+        rootGrid.Children.Add(pathTextBox);
 
         var browseButton = new Button
         {
-            Content = "...",
-            Margin = new Thickness(0, 4, 0, 0),
-            MinWidth = 36
+            Content = "\u2026",
+            Width = 48,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Center
         };
+        Grid.SetRow(browseButton, 3);
         Grid.SetColumn(browseButton, 1);
+        rootGrid.Children.Add(browseButton);
 
-        pathGrid.Children.Add(pathTextBox);
-        pathGrid.Children.Add(browseButton);
+        // Set minimum width on pathTextBox to ensure dialog is wide enough for comfortable input
+        pathTextBox.MinWidth = 400; // Adjust as needed for usability
 
-        contentPanel.Children.Add(nameLabel);
-        contentPanel.Children.Add(nameTextBox);
-        contentPanel.Children.Add(pathLabel);
-        contentPanel.Children.Add(pathGrid);
-
-        dialog.Content = contentPanel;
+        dialog.Content = rootGrid; // No Border wrapper needed
         dialog.IsPrimaryButtonEnabled = false;
 
         // Validation: name non-empty & unique, path absolute & not duplicate
