@@ -1,0 +1,61 @@
+<ContentDialog
+    x:Class="FSPSWinUI.Views.ProfileDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FSPSWinUI.Views"
+    xmlns:vm="using:FSPSWinUI.ViewModels"
+    Title="{x:Bind ViewModel.DialogTitle, Mode=OneWay}"
+    PrimaryButtonText="OK"
+    SecondaryButtonText="Cancel"
+    DefaultButton="Primary"
+    x:Name="DialogRoot"
+    HorizontalContentAlignment="Stretch"
+    CornerRadius="8"
+    Padding="24">
+
+    <Grid>
+        <Grid.Resources>
+            <local:SubtractValueConverter x:Key="SubtractValueConverter" />
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="ErrorTextBlock" Grid.Row="0" Visibility="Collapsed" Margin="0,0,0,12" Foreground="Red" TextWrapping="Wrap" />
+
+        <TextBlock Text="Profile name" Grid.Row="1" Margin="0,0,0,8" FontSize="14" />
+        <TextBox x:Name="NameTextBox"
+                 Text="{x:Bind ViewModel.Name, Mode=TwoWay}"
+                 Grid.Row="2"
+                 MinHeight="32"
+                 Width="400"
+                 Margin="0,0,0,8"
+                 PlaceholderText="Enter profile name"
+                 ToolTipService.ToolTip="Enter the name for the profile."
+                 x:FieldModifier="public" />
+
+        <TextBlock Text="Folder path" Grid.Row="3" Margin="0,0,0,8" FontSize="14" />
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0"
+                     Text="{x:Bind ViewModel.Path, Mode=TwoWay}"
+                     MinHeight="32"
+                     Margin="0,0,8,0"
+                     PlaceholderText="Select or enter folder path"
+                     ToolTipService.ToolTip="Select or enter the folder path for the profile."
+                     Width="{Binding ElementName=NameTextBox, Path=ActualWidth, Converter={StaticResource SubtractValueConverter}, ConverterParameter=48, Mode=OneWay}" />
+            <Button Grid.Column="1"
+                    Content="..."
+                    MinWidth="40"
+                    Click="BrowseButton_Click"
+                    ToolTipService.ToolTip="Browse for a folder." />
+        </Grid>
+    </Grid>
+</ContentDialog>

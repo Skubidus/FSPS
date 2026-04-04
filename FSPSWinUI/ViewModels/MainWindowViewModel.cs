@@ -44,9 +44,57 @@ public partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void EditProfile()
+    private async void AddProfile()
     {
-        // TODO: Implement edit logic.
+        var dialogVm = new ProfileDialogViewModel(Profiles, ProfileDialogViewModel.DialogMode.Create);
+        var dialog = new FSPSWinUI.Views.ProfileDialog(dialogVm, App.MainWindow.Content.XamlRoot);
+        var result = await dialog.ShowAsync();
+        if (result == Microsoft.UI.Xaml.Controls.ContentDialogResult.Primary)
+        {
+            var profile = dialogVm.GetResult();
+            try
+            {
+                if (!System.IO.Directory.Exists(profile.Path))
+                {
+                    System.IO.Directory.CreateDirectory(profile.Path);
+                }
+            }
+            catch (Exception ex)
+            {
+                var err = new Microsoft.UI.Xaml.Controls.ContentDialog
+                {
+                    Title = "Unable to create folder",
+                    Content = $"Could not create folder '{profile.Path}': {ex.Message}",
+                    PrimaryButtonText = "OK",
+                    XamlRoot = App.MainWindow.Content.XamlRoot
+                };
+                await err.ShowAsync();
+                return;
+            }
+            AddProfile(profile);
+        }
+    }
+
+    [RelayCommand]
+    private async void EditProfile()
+    {
+        if (SelectedProfile is null)
+        {
+            return;
+        }
+        var dialogVm = new ProfileDialogViewModel(Profiles, ProfileDialogViewModel.DialogMode.Edit, SelectedProfile);
+        var dialog = new FSPSWinUI.Views.ProfileDialog(dialogVm, App.MainWindow.Content.XamlRoot);
+        var result = await dialog.ShowAsync();
+        if (result == Microsoft.UI.Xaml.Controls.ContentDialogResult.Primary)
+        {
+            var updated = dialogVm.GetResult();
+            var oldName = SelectedProfile.Name;
+            var oldPath = SelectedProfile.Path;
+            SelectedProfile.Name = updated.Name;
+            SelectedProfile.Path = updated.Path;
+            Debug.WriteLine($"[INFO] Profile edited: OldName='{oldName}', OldPath='{oldPath}' → NewName='{updated.Name}', NewPath='{updated.Path}'");
+            // Optionally, re-sort or trigger any update logic
+        }
         return;
     }
 
@@ -60,6 +108,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         var toDelete = SelectedProfile;
         Profiles.Remove(toDelete);
+        Debug.WriteLine($"[INFO] Profile deleted: Name='{toDelete.Name}', Path='{toDelete.Path}'");
         if (Profiles.Count > 0)
         {
             SelectedProfile = Profiles[0];
@@ -81,6 +130,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         var currentSelectionName = SelectedProfile?.Name;
         Profiles.Add(profile);
+        Debug.WriteLine($"[INFO] New profile created: Name='{profile.Name}', Path='{profile.Path}'");
         SortProfiles();
 
         var newSelected = Profiles.FirstOrDefault(p => object.ReferenceEquals(p, profile));
@@ -92,6 +142,7 @@ public partial class MainWindowViewModel : ObservableObject
         if (newSelected is not null)
         {
             SelectedProfile = newSelected;
+            Debug.WriteLine($"[INFO] Profile selected: Name='{newSelected.Name}', Path='{newSelected.Path}'");
         }
         else if (currentSelectionName is not null)
         {
