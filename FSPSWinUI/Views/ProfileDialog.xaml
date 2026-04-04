@@ -22,12 +22,15 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Profile name" Grid.Row="0" Margin="0,0,0,8" FontSize="14" />
+        <TextBlock x:Name="ErrorTextBlock" Grid.Row="0" Visibility="Collapsed" Margin="0,0,0,12" Foreground="Red" TextWrapping="Wrap" />
+
+        <TextBlock Text="Profile name" Grid.Row="1" Margin="0,0,0,8" FontSize="14" />
         <TextBox x:Name="NameTextBox"
                  Text="{x:Bind ViewModel.Name, Mode=TwoWay}"
-                 Grid.Row="1"
+                 Grid.Row="2"
                  MinHeight="32"
                  Width="400"
                  Margin="0,0,0,8"
@@ -35,8 +38,8 @@
                  ToolTipService.ToolTip="Enter the name for the profile."
                  x:FieldModifier="public" />
 
-        <TextBlock Text="Folder path" Grid.Row="2" Margin="0,0,0,8" FontSize="14" />
-        <Grid Grid.Row="3">
+        <TextBlock Text="Folder path" Grid.Row="3" Margin="0,0,0,8" FontSize="14" />
+        <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />

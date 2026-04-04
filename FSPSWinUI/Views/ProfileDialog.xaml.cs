@@ -14,7 +14,6 @@ public sealed partial class ProfileDialog : ContentDialog
         this.XamlRoot = xamlRoot;
         this.DataContext = viewModel;
         this.ViewModel = viewModel;
-        // Validate on primary click; do not call Hide() here — let ContentDialog set the result to Primary.
         this.PrimaryButtonClick += OnPrimaryButtonClick;
     }
 
@@ -38,17 +37,12 @@ public sealed partial class ProfileDialog : ContentDialog
         if (!ViewModel.Validate(out var error))
         {
             args.Cancel = true;
-            var errorDialog = new ContentDialog
-            {
-                Title = "Error",
-                Content = error,
-                PrimaryButtonText = "OK",
-                XamlRoot = this.XamlRoot
-            };
-            _ = errorDialog.ShowAsync();
+            ErrorTextBlock.Text = error ?? "Validation failed.";
+            ErrorTextBlock.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+            _ = NameTextBox.Focus(Microsoft.UI.Xaml.FocusState.Programmatic);
             return;
         }
-        // Let the ContentDialog complete normally so ShowAsync() returns Primary
+
         return;
     }
 }

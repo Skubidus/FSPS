@@ -121,10 +121,54 @@ public sealed partial class MainWindow : Window
     }
 
 
+    private static void OpenExplorerAndSelect(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return;
+        }
+
+        try
+        {
+            var full = Path.GetFullPath(path);
+            var root = Path.GetPathRoot(full) ?? string.Empty;
+
+            // If root (e.g., "C:\") then open root directly
+            if (string.Equals(full.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+                              root.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+                              StringComparison.OrdinalIgnoreCase))
+            {
+                Process.Start(new ProcessStartInfo("explorer.exe", $"\"{full}\"") { UseShellExecute = true });
+                return;
+            }
+
+            // If the exact path exists (folder or file), ask Explorer to select it
+            if (Directory.Exists(full) || File.Exists(full))
+            {
+                Process.Start(new ProcessStartInfo("explorer.exe", $"/select,\"{full}\"") { UseShellExecute = true });
+                return;
+            }
+
+            // Fallback to nearest existing parent folder
+            var parent = full;
+            while (!string.IsNullOrEmpty(parent) && !Directory.Exists(parent))
+            {
+                parent = Path.GetDirectoryName(parent);
+            }
+
+            if (!string.IsNullOrEmpty(parent))
+            {
+                Process.Start(new ProcessStartInfo("explorer.exe", $"\"{parent}\"") { UseShellExecute = true });
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"OpenExplorerAndSelect failed: {ex}");
+        }
+    }
+
     private async void DeleteProfileButton_Click(object sender, RoutedEventArgs e)
     {
-
-
         if (!(this.Content is FrameworkElement root && root.DataContext is MainWindowViewModel vm))
         {
             return;
@@ -136,19 +180,51 @@ public sealed partial class MainWindow : Window
             return;
         }
 
+        // Build a dialog with a checkbox that, when checked, opens Explorer at the profile's parent folder after deletion.
+        var note = new TextBlock
+        {
+            TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap
+        };
+        note.Inlines.Add(new Microsoft.UI.Xaml.Documents.Run { Text = "Are you sure you want to delete the profile " });
+        var boldName = new Microsoft.UI.Xaml.Documents.Bold();
+        boldName.Inlines.Add(new Microsoft.UI.Xaml.Documents.Run { Text = $"\"{selected.Name}\"" });
+        note.Inlines.Add(boldName);
+        note.Inlines.Add(new Microsoft.UI.Xaml.Documents.Run { Text = "?" });
+        var openExplorerCheck = new Microsoft.UI.Xaml.Controls.CheckBox
+        {
+            Content = "Open Explorer to manually delete the folder",
+            IsChecked = false,
+            Margin = new Microsoft.UI.Xaml.Thickness(0, 12, 0, 0)
+        };
+
+        var panel = new Microsoft.UI.Xaml.Controls.StackPanel();
+        panel.Children.Add(note);
+
+        var infoText = new TextBlock
+        {
+            Text = "Important: The folder will NOT be deleted automatically. You must delete it manually.",
+            FontWeight = Microsoft.UI.Text.FontWeights.Bold,
+            TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap,
+            Margin = new Microsoft.UI.Xaml.Thickness(0, 8, 0, 0)
+        };
+        panel.Children.Add(infoText);
+
+        panel.Children.Add(openExplorerCheck);
+
         var dialog = new ContentDialog
         {
             Title = "Delete Profile",
-            Content = $"Are you sure you want to delete the profile '{selected.Name}'?",
+            Content = panel,
             PrimaryButtonText = "Delete",
             SecondaryButtonText = "Cancel",
-            DefaultButton = ContentDialogButton.Secondary
+            DefaultButton = ContentDialogButton.Secondary,
+            XamlRoot = root.XamlRoot
         };
-        dialog.XamlRoot = root.XamlRoot;
 
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
+            // Remove profile from in-memory list only
             if (vm.DeleteProfileCommand.CanExecute(null))
             {
                 Debug.WriteLine($"[DEBUG] Deleting profile: Name='{selected.Name}', Path='{selected.Path}'");
@@ -158,6 +234,19 @@ public sealed partial class MainWindow : Window
             if (vm.ProfileSelectionChangedCommand.CanExecute(null))
             {
                 vm.ProfileSelectionChangedCommand.Execute(null);
+            }
+
+            // If user requested, open Explorer at parent folder so they can delete manually
+            if (openExplorerCheck.IsChecked == true)
+            {
+                try
+                {
+                    OpenExplorerAndSelect(selected.Path ?? string.Empty);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[WARN] Failed to open Explorer: {ex}");
+                }
             }
         }
     }
