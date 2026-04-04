@@ -63,7 +63,7 @@
 
                 <ComboBox x:Name="ProfileComboBox" Grid.Column="1" ItemsSource="{x:Bind ViewModel.Profiles}" SelectedItem="{x:Bind ViewModel.SelectedProfile, Mode=TwoWay}" DisplayMemberPath="Name" MinWidth="200" HorizontalAlignment="Stretch" VerticalAlignment="Center" AutomationProperties.Name="Profile Selection" />
 
-                <Button Grid.Column="2" Margin="8,0,0,0" Click="AddProfileButton_Click" ToolTipService.ToolTip="Add profile" VerticalAlignment="Center" AutomationProperties.Name="Add Profile">
+                <Button Grid.Column="2" Margin="8,0,0,0" Command="{x:Bind ViewModel.AddProfileCommand}" ToolTipService.ToolTip="Add profile" VerticalAlignment="Center" AutomationProperties.Name="Add Profile">
                     <SymbolIcon Symbol="Add" />
                 </Button>
 

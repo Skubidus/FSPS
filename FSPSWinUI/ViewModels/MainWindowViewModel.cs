@@ -44,9 +44,54 @@ public partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void EditProfile()
+    private async void AddProfile()
     {
-        // TODO: Implement edit logic.
+        var dialogVm = new ProfileDialogViewModel(Profiles, ProfileDialogViewModel.DialogMode.Create);
+        var dialog = new FSPSWinUI.Views.ProfileDialog(dialogVm, App.MainWindow.Content.XamlRoot);
+        var result = await dialog.ShowAsync();
+        if (result == Microsoft.UI.Xaml.Controls.ContentDialogResult.Primary)
+        {
+            var profile = dialogVm.GetResult();
+            try
+            {
+                if (!System.IO.Directory.Exists(profile.Path))
+                {
+                    System.IO.Directory.CreateDirectory(profile.Path);
+                }
+            }
+            catch (Exception ex)
+            {
+                var err = new Microsoft.UI.Xaml.Controls.ContentDialog
+                {
+                    Title = "Unable to create folder",
+                    Content = $"Could not create folder '{profile.Path}': {ex.Message}",
+                    PrimaryButtonText = "OK",
+                    XamlRoot = App.MainWindow.Content.XamlRoot
+                };
+                await err.ShowAsync();
+                return;
+            }
+            AddProfile(profile);
+        }
+    }
+
+    [RelayCommand]
+    private async void EditProfile()
+    {
+        if (SelectedProfile is null)
+        {
+            return;
+        }
+        var dialogVm = new ProfileDialogViewModel(Profiles, ProfileDialogViewModel.DialogMode.Edit, SelectedProfile);
+        var dialog = new FSPSWinUI.Views.ProfileDialog(dialogVm, App.MainWindow.Content.XamlRoot);
+        var result = await dialog.ShowAsync();
+        if (result == Microsoft.UI.Xaml.Controls.ContentDialogResult.Primary)
+        {
+            var updated = dialogVm.GetResult();
+            SelectedProfile.Name = updated.Name;
+            SelectedProfile.Path = updated.Path;
+            // Optionally, re-sort or trigger any update logic
+        }
         return;
     }
 
