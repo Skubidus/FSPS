@@ -29,13 +29,14 @@
 
         <TextBlock Text="Profile name" Grid.Row="1" Margin="0,0,0,8" FontSize="14" />
         <TextBox x:Name="NameTextBox"
-                 Text="{x:Bind ViewModel.Name, Mode=TwoWay}"
+                 Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  Grid.Row="2"
                  MinHeight="32"
                  Width="400"
                  Margin="0,0,0,8"
                  PlaceholderText="Enter profile name"
                  ToolTipService.ToolTip="Enter the name for the profile."
+                 AutomationProperties.Name="Profile name"
                  x:FieldModifier="public" />
 
         <TextBlock Text="Folder path" Grid.Row="3" Margin="0,0,0,8" FontSize="14" />
@@ -44,18 +45,20 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0"
-                     Text="{x:Bind ViewModel.Path, Mode=TwoWay}"
+            <TextBox x:Name="PathTextBox" Grid.Column="0"
+                     Text="{x:Bind ViewModel.Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      MinHeight="32"
                      Margin="0,0,8,0"
                      PlaceholderText="Select or enter folder path"
                      ToolTipService.ToolTip="Select or enter the folder path for the profile."
+                     AutomationProperties.Name="Profile path"
                      Width="{Binding ElementName=NameTextBox, Path=ActualWidth, Converter={StaticResource SubtractValueConverter}, ConverterParameter=48, Mode=OneWay}" />
             <Button Grid.Column="1"
                     Content="..."
                     MinWidth="40"
                     Click="BrowseButton_Click"
-                    ToolTipService.ToolTip="Browse for a folder." />
+                    ToolTipService.ToolTip="Browse for a folder."
+                    AutomationProperties.Name="Browse folder" />
         </Grid>
     </Grid>
 </ContentDialog>

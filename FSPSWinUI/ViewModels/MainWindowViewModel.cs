@@ -1,7 +1,13 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FSPSLibrary;
 using FSPSLibrary.Models;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
+using System.Linq;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 
 namespace FSPSWinUI.ViewModels;
@@ -11,6 +17,10 @@ public partial class MainWindowViewModel : ObservableObject
 
 
     public ObservableCollection<ProfileModel> Profiles { get; } = new ObservableCollection<ProfileModel>();
+
+    // Indicates whether there are any profiles present. UI binds to this to enable/disable
+    // controls that require at least one profile (e.g., the profile ComboBox).
+    public bool HasProfiles => Profiles.Count > 0;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanDelete))]
@@ -27,12 +37,35 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private string _appTitle = "FSPS";
 
+    private readonly IProfileStore _profileStore;
+
     public MainWindowViewModel()
     {
-        // sample placeholder entries - can be removed later
-        Profiles.Add(new ProfileModel { Name = "Default" });
-        Profiles.Add(new ProfileModel { Name = "Modded" });
-        Profiles.CollectionChanged += (s, e) => { OnPropertyChanged(nameof(CanDelete)); };
+        // initialize profile store pointing to profiles.json in the app folder
+        _profileStore = new FSPSWinUI.Storage.JsonProfileStore(Path.Combine(AppContext.BaseDirectory, "profiles.json"));
+
+        // load existing profiles from store (synchronous in ctor to ensure UI shows them immediately)
+        try
+        {
+            var loaded = _profileStore.LoadAsync().GetAwaiter().GetResult();
+            foreach (var p in loaded)
+            {
+                Profiles.Add(p);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[WARN] Unable to load profiles: {ex}");
+        }
+
+        // keep CanDelete/HasProfiles updated and persist changes when collection changes
+        Profiles.CollectionChanged += (s, e) =>
+        {
+            OnPropertyChanged(nameof(CanDelete));
+            OnPropertyChanged(nameof(HasProfiles));
+            _ = SaveProfilesAsync(); // fire-and-forget; errors logged inside SaveProfilesAsync
+        };
+
         SelectedProfile = Profiles.Count > 0 ? Profiles[0] : null;
 
         var config = new ConfigurationBuilder()
@@ -90,10 +123,42 @@ public partial class MainWindowViewModel : ObservableObject
             var updated = dialogVm.GetResult();
             var oldName = SelectedProfile.Name;
             var oldPath = SelectedProfile.Path;
+
+            // Ensure the new path exists (like AddProfile)
+            try
+            {
+                if (!System.IO.Directory.Exists(updated.Path))
+                {
+                    System.IO.Directory.CreateDirectory(updated.Path);
+                }
+            }
+            catch (Exception ex)
+            {
+                var err = new Microsoft.UI.Xaml.Controls.ContentDialog
+                {
+                    Title = "Unable to create folder",
+                    Content = $"Could not create folder '{updated.Path}': {ex.Message}",
+                    PrimaryButtonText = "OK",
+                    XamlRoot = App.MainWindow.Content.XamlRoot
+                };
+                await err.ShowAsync();
+                return;
+            }
+
             SelectedProfile.Name = updated.Name;
             SelectedProfile.Path = updated.Path;
             Debug.WriteLine($"[INFO] Profile edited: OldName='{oldName}', OldPath='{oldPath}' → NewName='{updated.Name}', NewPath='{updated.Path}'");
-            // Optionally, re-sort or trigger any update logic
+            // Re-sort collection and persist changes to the store
+            try
+            {
+                SortProfiles();
+                await SaveProfilesAsync().ConfigureAwait(false);
+                Debug.WriteLine("[INFO] Profiles saved to store after edit.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[ERROR] Failed to save profiles after edit: {ex}");
+            }
         }
         return;
     }
@@ -116,6 +181,16 @@ public partial class MainWindowViewModel : ObservableObject
         else
         {
             SelectedProfile = null;
+        }
+
+        // persist changes
+        try
+        {
+            SaveProfilesAsync().GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[ERROR] Failed to save profiles after delete: {ex}");
         }
 
         return;
@@ -153,6 +228,20 @@ public partial class MainWindowViewModel : ObservableObject
             SelectedProfile = Profiles.Count > 0 ? Profiles[0] : null;
         }
 
+        // persist immediately
+        try
+        {
+            SaveProfilesAsync().GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[ERROR] Failed to save profiles after add: {ex}");
+        }
+
+        // Ensure CanDelete/HasProfiles are refreshed so UI (IsEnabled bindings) update correctly
+        OnPropertyChanged(nameof(CanDelete));
+        OnPropertyChanged(nameof(HasProfiles));
+
         return;
     }
 
@@ -173,6 +262,19 @@ public partial class MainWindowViewModel : ObservableObject
         else
         {
             SelectedProfile = Profiles.Count > 0 ? Profiles[0] : null;
+        }
+    }
+
+    private async Task SaveProfilesAsync()
+    {
+        try
+        {
+            await _profileStore.SaveAsync(Profiles).ConfigureAwait(false);
+            Debug.WriteLine("[INFO] Profiles saved to store.");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[ERROR] Failed to save profiles: {ex}");
         }
     }
 

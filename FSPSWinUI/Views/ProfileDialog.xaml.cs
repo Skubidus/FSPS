@@ -34,6 +34,10 @@ public sealed partial class ProfileDialog : ContentDialog
 
     private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
     {
+        // Ensure latest UI values are committed to the ViewModel before validation
+        ViewModel.Name = NameTextBox.Text ?? string.Empty;
+        ViewModel.Path = PathTextBox.Text ?? string.Empty;
+
         if (!ViewModel.Validate(out var error))
         {
             args.Cancel = true;
@@ -43,6 +47,8 @@ public sealed partial class ProfileDialog : ContentDialog
             return;
         }
 
+        // hide any previous error
+        ErrorTextBlock.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
         return;
     }
 }

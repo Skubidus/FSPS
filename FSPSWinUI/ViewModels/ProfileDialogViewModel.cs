@@ -37,8 +37,6 @@ public partial class ProfileDialogViewModel : ObservableObject
 
     public bool CanOk => Validate(out _);
 
-    public IRelayCommand BrowseCommand { get; }
-
     public ProfileDialogViewModel(ObservableCollection<ProfileModel> profiles, DialogMode mode, ProfileModel? profileToEdit = null)
     {
         _profiles = profiles;
@@ -49,13 +47,6 @@ public partial class ProfileDialogViewModel : ObservableObject
             Name = profileToEdit.Name;
             Path = profileToEdit.Path;
         }
-        // BrowseCommand is set in dialog code-behind if needed
-    }
-
-    private void OnBrowse()
-    {
-        // Browse logic will be handled in dialog code-behind (to access XamlRoot/window handle)
-        return;
     }
 
     public bool Validate(out string? error)

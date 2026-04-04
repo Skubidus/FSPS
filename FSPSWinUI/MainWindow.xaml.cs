@@ -38,11 +38,10 @@ public sealed partial class MainWindow : Window
     public MainWindow(MainWindowViewModel viewModel)
     {
         ArgumentNullException.ThrowIfNull(viewModel);
-
-        InitializeComponent();
-
         // Use DI-provided ViewModel instead of creating a new one
         this.ViewModel = viewModel;
+
+        InitializeComponent();
         if (this.Content is FrameworkElement root)
         {
             root.DataContext = this.ViewModel;
