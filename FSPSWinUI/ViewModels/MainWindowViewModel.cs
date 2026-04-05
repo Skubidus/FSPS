@@ -77,10 +77,10 @@ public partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async void AddProfile()
+    private async Task AddProfileAsync()
     {
         var dialogVm = new ProfileDialogViewModel(Profiles, ProfileDialogViewModel.DialogMode.Create);
-        var dialog = new FSPSWinUI.Views.ProfileDialog(dialogVm, App.MainWindow.Content.XamlRoot);
+        var dialog = new FSPSWinUI.Views.ProfileDialog(dialogVm, App.MainWindow!.Content.XamlRoot);
         var result = await dialog.ShowAsync();
         if (result == Microsoft.UI.Xaml.Controls.ContentDialogResult.Primary)
         {
@@ -104,19 +104,20 @@ public partial class MainWindowViewModel : ObservableObject
                 await err.ShowAsync();
                 return;
             }
-            AddProfile(profile);
+
+            await AddProfileAsync(profile);
         }
     }
 
     [RelayCommand]
-    private async void EditProfile()
+    private async Task EditProfileAsync()
     {
         if (SelectedProfile is null)
         {
             return;
         }
         var dialogVm = new ProfileDialogViewModel(Profiles, ProfileDialogViewModel.DialogMode.Edit, SelectedProfile);
-        var dialog = new FSPSWinUI.Views.ProfileDialog(dialogVm, App.MainWindow.Content.XamlRoot);
+        var dialog = new FSPSWinUI.Views.ProfileDialog(dialogVm, App.MainWindow!.Content.XamlRoot);
         var result = await dialog.ShowAsync();
         if (result == Microsoft.UI.Xaml.Controls.ContentDialogResult.Primary)
         {
@@ -164,7 +165,7 @@ public partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void DeleteProfile()
+    private async Task DeleteProfile()
     {
         if (SelectedProfile is null)
         {
@@ -174,19 +175,11 @@ public partial class MainWindowViewModel : ObservableObject
         var toDelete = SelectedProfile;
         Profiles.Remove(toDelete);
         Debug.WriteLine($"[INFO] Profile deleted: Name='{toDelete.Name}', Path='{toDelete.Path}'");
-        if (Profiles.Count > 0)
-        {
-            SelectedProfile = Profiles[0];
-        }
-        else
-        {
-            SelectedProfile = null;
-        }
+        SelectedProfile = Profiles.Count > 0 ? Profiles[0] : null;
 
-        // persist changes
         try
         {
-            SaveProfilesAsync().GetAwaiter().GetResult();
+            await SaveProfilesAsync();
         }
         catch (Exception ex)
         {
@@ -196,7 +189,7 @@ public partial class MainWindowViewModel : ObservableObject
         return;
     }
 
-    public void AddProfile(ProfileModel profile)
+    public async Task AddProfileAsync(ProfileModel profile)
     {
         if (profile is null)
         {
@@ -228,17 +221,15 @@ public partial class MainWindowViewModel : ObservableObject
             SelectedProfile = Profiles.Count > 0 ? Profiles[0] : null;
         }
 
-        // persist immediately
         try
         {
-            SaveProfilesAsync().GetAwaiter().GetResult();
+            await SaveProfilesAsync();
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"[ERROR] Failed to save profiles after add: {ex}");
         }
 
-        // Ensure CanDelete/HasProfiles are refreshed so UI (IsEnabled bindings) update correctly
         OnPropertyChanged(nameof(CanDelete));
         OnPropertyChanged(nameof(HasProfiles));
 

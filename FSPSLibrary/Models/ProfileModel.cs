@@ -1,12 +1,11 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace FSPSLibrary.Models;
 
-public sealed partial class ProfileModel : ObservableObject
+public class ProfileModel
 {
-    [ObservableProperty]
-    private string name = string.Empty;
-
-    [ObservableProperty]
-    private string path = string.Empty;
+    [Required]
+    public string Name { get; set; } = string.Empty;
+    [Required]
+    public string Path { get; set; } = string.Empty;
 }

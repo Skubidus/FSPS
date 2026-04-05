@@ -1,0 +1,327 @@
+{
+  "settings": {
+    "components": {
+      "code": true,
+      "binaries": false
+    },
+    "targetId": "net10.0",
+    "targetDisplayName": ".NETCoreApp,Version=v10.0"
+  },
+  "analysisStartTime": "2026-04-05T12:41:53.2924838Z",
+  "analysisEndTime": "2026-04-05T12:41:56.4158925Z",
+  "privacyModeHelpUrl": "https://go.microsoft.com/fwlink/?linkid=2270980",
+  "stats": {
+    "summary": {
+      "projects": 2,
+      "issues": 2,
+      "incidents": 8,
+      "effort": 8
+    },
+    "charts": {
+      "severity": {
+        "Mandatory": 2,
+        "Optional": 0,
+        "Potential": 6,
+        "Information": 0
+      },
+      "category": {
+        "Project": 2,
+        "Api": 6
+      }
+    }
+  },
+  "projects": [
+    {
+      "path": "FSPSLibrary\\FSPSLibrary.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "FSPSLibrary",
+        "projectKind": "WinUI",
+        "frameworks": [
+          "net9.0-windows10.0.19041.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 3,
+        "numberOfCodeFiles": 3,
+        "linesTotal": 41,
+        "linesOfCode": 41,
+        "totalApiScanned": 5,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "b007c54b-dfc6-4f4e-abbc-7e71998da7e0",
+          "ruleId": "Project.0002",
+          "projectPath": "FSPSLibrary\\FSPSLibrary.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0-windows10.0.19041.0\nRecommended target framework: net10.0-windows10.0.22000.0",
+              "protected": "Current target framework: net9.0-windows10.0.19041.0\nRecommended target framework: net10.0-windows10.0.22000.0"
+            },
+            "kind": "File",
+            "path": "FSPSLibrary\\FSPSLibrary.csproj",
+            "snippet": "Current target framework: net9.0-windows10.0.19041.0\nRecommended target framework: net10.0-windows10.0.22000.0",
+            "protectedSnippet": "Current target framework: net9.0-windows10.0.19041.0\nRecommended target framework: net10.0-windows10.0.22000.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0-windows10.0.19041.0",
+              "RecommendedTargetFramework": "net10.0-windows10.0.22000.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "FSPSWinUI\\FSPSWinUI.csproj",
+      "startingProject": true,
+      "issues": 2,
+      "storyPoints": 7,
+      "properties": {
+        "appName": "FSPSWinUI",
+        "projectKind": "WinForms",
+        "frameworks": [
+          "net9.0-windows10.0.19041.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 27,
+        "numberOfCodeFiles": 11,
+        "linesTotal": 1846,
+        "linesOfCode": 1126,
+        "totalApiScanned": 1601,
+        "minLinesOfCodeToChange": 6,
+        "maxLinesOfCodeToChange": 6
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "b425d3d2-c16f-4d1a-aab0-3e51a9f5eceb",
+          "ruleId": "Project.0002",
+          "projectPath": "FSPSWinUI\\FSPSWinUI.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0-windows10.0.19041.0\nRecommended target framework: net10.0-windows10.0.22000.0",
+              "protected": "Current target framework: net9.0-windows10.0.19041.0\nRecommended target framework: net10.0-windows10.0.22000.0"
+            },
+            "kind": "File",
+            "path": "FSPSWinUI\\FSPSWinUI.csproj",
+            "snippet": "Current target framework: net9.0-windows10.0.19041.0\nRecommended target framework: net10.0-windows10.0.22000.0",
+            "protectedSnippet": "Current target framework: net9.0-windows10.0.19041.0\nRecommended target framework: net10.0-windows10.0.22000.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0-windows10.0.19041.0",
+              "RecommendedTargetFramework": "net10.0-windows10.0.22000.0"
+            }
+          }
+        },
+        {
+          "incidentId": "5cc9ddb5-c22f-4be0-b10a-5a5e6664b42a",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "FSPSWinUI\\FSPSWinUI.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "global::System.Uri resourceLocator = new global::System.Uri(\u0022ms-appx:///Views/ProfileDialog.xaml\u0022);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "FSPSWinUI\\obj\\x64\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\Views\\ProfileDialog.g.i.cs",
+            "snippet": "global::System.Uri resourceLocator = new global::System.Uri(\u0022ms-appx:///Views/ProfileDialog.xaml\u0022);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 43,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "db58c473-15f3-4999-b11d-0c597b912513",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "FSPSWinUI\\FSPSWinUI.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "global::System.Uri resourceLocator = new global::System.Uri(\u0022ms-appx:///Views/ProfileDialog.xaml\u0022);",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "FSPSWinUI\\obj\\x64\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\Views\\ProfileDialog.g.i.cs",
+            "snippet": "global::System.Uri resourceLocator = new global::System.Uri(\u0022ms-appx:///Views/ProfileDialog.xaml\u0022);",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 43,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "517cdedb-bdd2-4e2b-b755-df55cb43030f",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "FSPSWinUI\\FSPSWinUI.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "global::System.Uri resourceLocator = new global::System.Uri(\u0022ms-appx:///App.xaml\u0022);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "FSPSWinUI\\obj\\x64\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\App.g.i.cs",
+            "snippet": "global::System.Uri resourceLocator = new global::System.Uri(\u0022ms-appx:///App.xaml\u0022);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 50,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "34b2dcf8-e285-4611-bee8-134d6f182905",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "FSPSWinUI\\FSPSWinUI.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "global::System.Uri resourceLocator = new global::System.Uri(\u0022ms-appx:///App.xaml\u0022);",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "FSPSWinUI\\obj\\x64\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\App.g.i.cs",
+            "snippet": "global::System.Uri resourceLocator = new global::System.Uri(\u0022ms-appx:///App.xaml\u0022);",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 50,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "b2f77ffe-8dc8-4b5d-8fd2-79a28a9198d3",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "FSPSWinUI\\FSPSWinUI.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "global::System.Uri resourceLocator = new global::System.Uri(\u0022ms-appx:///MainWindow.xaml\u0022);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "FSPSWinUI\\obj\\x64\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\MainWindow.g.i.cs",
+            "snippet": "global::System.Uri resourceLocator = new global::System.Uri(\u0022ms-appx:///MainWindow.xaml\u0022);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 43,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "68a50745-6be5-4c43-b549-3ca7e886a101",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "FSPSWinUI\\FSPSWinUI.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "global::System.Uri resourceLocator = new global::System.Uri(\u0022ms-appx:///MainWindow.xaml\u0022);",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "FSPSWinUI\\obj\\x64\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\MainWindow.g.i.cs",
+            "snippet": "global::System.Uri resourceLocator = new global::System.Uri(\u0022ms-appx:///MainWindow.xaml\u0022);",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 43,
+            "column": 12
+          }
+        }
+      ],
+      "features": []
+    }
+  ],
+  "rules": {
+    "Project.0002": {
+      "id": "Project.0002",
+      "isFeature": false,
+      "description": "Project\u0027s target framework(s) needs to be changed to the new target framework that you selected for this upgrade.\n\nDuring upgrade target framework will be adjusted to corresponding platform when applicable. In some cases project would result in multiple target frameworks after the upgrade if it was using features that now have their own platforms in modern .NET frameworks (windows, iOS, Android etc).",
+      "label": "Project\u0027s target framework(s) needs to be changed",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Overview of porting from .NET Framework to .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265227",
+          "isCustom": false
+        },
+        {
+          "title": ".NET project SDKs",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265226",
+          "isCustom": false
+        }
+      ]
+    },
+    "Api.0003": {
+      "id": "Api.0003",
+      "isFeature": false,
+      "description": "API has a behavioral change in selected .NET version: code and binaries may behave differently at runtime without needing recompilation, but the new behavior might be undesirable and require updates.",
+      "label": "Behavioral change in selected .NET version",
+      "severity": "Potential",
+      "effort": 1
+    }
+  }
+}
